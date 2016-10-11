@@ -45,9 +45,13 @@
 			}
 			
 			#content {
+				position:absolute;/*层漂浮*/    
+				top:5%;    
+				left:30%;    
 				margin-left : auto;
 				margin-right : auto;
 				max-width: 600px;
+				border:1px dashed #ff2a00;
 			}
 			
 			#sketch, #filter {
@@ -98,18 +102,14 @@
 				fill : steelblue;
 				fill-opacity : .9;
 			}
-			.suspend {
-			    position: fixed;
-			    top: 200px;
-			    right: 0px;
-			}
 			.right-btn {
-			    width: 25px;
-			    height: 91px;
-			    background: url(timg.jpeg);
+			    position: fixed;
+			    top: 40%;
+			    right: 0px;
+			    width: 80px;
+			    height: 60px;
 			    border: 1px dashed #ff2a00;
 			}
-
 		</style>
 	</head>
 	<body>
@@ -128,13 +128,12 @@
 			$(".right-btn").click(function(){
 				$(".right-btn").animate({ width: 'hide', display: 'none' });	
 	
-				/*$(this).parent().find("ul.menu").slideToggle(800);*/  //上下滚动函数slidetoggle（speed,）
 				$("#content").animate({ width: 'show' ,height:'show' ,display:'block',}); //height 变化可有可无
 		
 			});
 
 			//close menu(必须包含在函数之内)
-			$(".xxx").click(function(){
+			$("#close").click(function(){
 				$(".right-btn").animate({ width: 'show',  display: 'block' });	
 				$("#content").animate({ width: 'hide' ,height:'hide',display:'none',}); 	//height 变化可有可无
 		
@@ -142,13 +141,12 @@
 
 		});
 		</script>
-		<div class="suspend">
-			<div class="right-btn">
-				<span class="arrow up"></span>
-			</div>
+		学习专注度监控（测试中，不会对成绩有任何影响！）
+		<div class="right-btn">
+			<video id="video-right-btn" width="80" height="60" autoplay>
+				</video>
+		</div>
 		<div id="content" style="display:none;">
-			<h2>学习专注度识别</h2>
-			<p>此功能正在开发中，目前对你的成绩不会产生任何影响</p>
 			<div id="container">
 				<video id="videoel" preload="auto" loop="" width="400" height="300">
 				</video>
@@ -325,20 +323,24 @@
 				<div id="emotion_chart"></div>
 			</div>
 			<div id="controls">
-				<input class="btn" value="开始" onclick="startVideo()" id="startbutton" type="button">
+				<input class="btn" value="开始" onclick="switchVideo()" id="switchButton" type="button" disabled="true">
+				<input class="btn" value="关闭" id="close" type="button">
 			</div>
 			
 			<script>
 				var vid = document.getElementById('videoel');
+				var vrb = document.getElementById('video-right-btn');
 				var overlay = document.getElementById('overlay');
 				var overlayCC = overlay.getContext('2d');
+				var startable = false;
 				
 				/********** check and set up video/webcam **********/
 
 				function enablestart() {
-					var startbutton = document.getElementById('startbutton');
+					var startbutton = document.getElementById('switchButton');
 					startbutton.value = "开始";
 					startbutton.disabled = false;
+					startable = true;
 				}
 				
 		
@@ -360,16 +362,16 @@
 					navigator.getUserMedia(videoSelector, function( stream ) {
 						if (vid.mozCaptureStream) {
 							vid.mozSrcObject = stream;
+							vrb.mozSrcObject = stream;
 						} else {
 							vid.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+							vrb.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
 						}
 						vid.play();
 					}, function() {
-						//insertAltVideo(vid);
 						alert("无法识别您的摄像头，请检查摄像头是否可用");
 					});
 				} else {
-					//insertAltVideo(vid);
 					alert("对不起，您的浏览器不支持getUserMedia！！");
 				}
 
@@ -380,32 +382,45 @@
 				var ctrack = new clm.tracker({useWebGL : true});
 				ctrack.init(pModel);
 
-				function startVideo() {
-					// start video
-					vid.play();
-					// start tracking
-					ctrack.start(vid);
-					// start loop to draw face
-					drawLoop();
+				function switchVideo() {
+					var startbutton = document.getElementById('switchButton');
+					if(startable){
+						// start video
+						vid.play();
+						// start tracking
+						ctrack.start(vid);
+						// start loop to draw face
+						drawLoop();
+						startbutton.value = "停止";
+						startable = false;
+					}
+					else{
+						ctrack.stop();
+						startbutton.value = "开始";
+						startable = true;
+					}
 				}
 				
 				function drawLoop() {
-					requestAnimFrame(drawLoop);
-					overlayCC.clearRect(0, 0, 400, 300);
-					//psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
-					if (ctrack.getCurrentPosition()) {
-						ctrack.draw(overlay);
-					}
-					var cp = ctrack.getCurrentParameters();
+							
+						requestAnimFrame(drawLoop);
+						if(startable==false){//startable is false, it means that ctrack is started
+						overlayCC.clearRect(0, 0, 400, 300);
+						//psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
+						if (ctrack.getCurrentPosition()) {
+							ctrack.draw(overlay);
+						}
+						var cp = ctrack.getCurrentParameters();
 					
-					var er = ec.meanPredict(cp);
-					if (er) {
-						updateData(er);
-						for (var i = 0;i < er.length;i++) {
-							if (er[i].value > 0.4) {
-								document.getElementById('icon'+(i+1)).style.visibility = 'visible';
-							} else {
-								document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
+						var er = ec.meanPredict(cp);
+						if (er) {
+							updateData(er);
+							for (var i = 0;i < er.length;i++) {
+								if (er[i].value > 0.4) {
+									document.getElementById('icon'+(i+1)).style.visibility = 'visible';
+								} else {
+									document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
+								}
 							}
 						}
 					}
@@ -503,9 +518,9 @@
 				}, false);
 				
 			</script>
+			<canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
 		</div>
-		<canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
-	</div>
+		
 	
 
 </body>
