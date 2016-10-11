@@ -101,27 +101,6 @@
 			}
 
 		</style>
-		<!--<script type="text/javascript" async="" src="clm_emotiondetection_files/ga.js"></script><script>
-			// getUserMedia only works over https in Chrome 47+, so we redirect to https. Also notify user if running from file.
-			/*if (window.location.protocol == "file:") {
-				alert("You seem to be running this example directly from a file. Note that these examples only work when served from a server or localhost due to canvas cross-domain restrictions.");
-			} else if (window.location.hostname !== "localhost" && window.location.protocol !== "https:"){
-				window.location.protocol = "https";
-			}*/-->
-		</script>
-		<!--<script type="text/javascript">
-
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-32642923-1']);
-			_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
-
-		</script>-->
 	</head>
 	<body>
 		<script src="utils.js"></script>
@@ -305,22 +284,7 @@
 					<img class="emotion_icon" id="icon3" src="icon_surprised.png" style="visibility: hidden;">
 					<img class="emotion_icon" id="icon4" src="icon_happy.png" style="visibility: hidden;">
 				</div>
-				<div id="emotion_chart">
-<svg width="400" height="100">
-	<rect x="40" y="66.61125410575768" height="3.3887458942423208" width="30" fill="#2d578b"></rect>
-	<rect x="125" y="56.561457592153594" height="13.438542407846406" width="30" fill="#2d578b"></rect>
-	<rect x="210" y="62.666907574139785" height="7.333092425860215" width="30" fill="#2d578b"></rect>
-	<rect x="295" y="58.80826995166295" height="11.191730048337053" width="30" fill="#2d578b"></rect>
-	<text x="70" y="66.61125410575768" dx="-15" dy="1.2em" text-anchor="middle" fill="white" class="labels">0.0</text>
-	<text x="155" y="56.561457592153594" dx="-15" dy="1.2em" text-anchor="middle" fill="white" class="labels">0.2</text>
-	<text x="240" y="62.666907574139785" dx="-15" dy="1.2em" text-anchor="middle" fill="white" class="labels">0.1</text>
-	<text x="325" y="58.80826995166295" dx="-15" dy="1.2em" text-anchor="middle" fill="white" class="labels">0.2</text>
-	<text x="70" y="70" dx="-15" text-anchor="middle" style="font-size: 12" transform="translate(0, 18)" class="yAxis">生气</text>
-	<text x="155" y="70" dx="-15" text-anchor="middle" style="font-size: 12" transform="translate(0, 18)" class="yAxis">悲伤</text>
-	<text x="240" y="70" dx="-15" text-anchor="middle" style="font-size: 12" transform="translate(0, 18)" class="yAxis">惊讶</text>
-	<text x="325" y="70" dx="-15" text-anchor="middle" style="font-size: 12" transform="translate(0, 18)" class="yAxis">高兴</text>
-</svg>
-</div>
+				<div id="emotion_chart"></div>
 			</div>
 			<div id="controls">
 				<input class="btn" value="开始" onclick="startVideo()" id="startbutton" type="button">
@@ -336,22 +300,10 @@
 				function enablestart() {
 					var startbutton = document.getElementById('startbutton');
 					startbutton.value = "开始";
-					startbutton.disabled = null;
+					startbutton.disabled = false;
 				}
 				
-				/*var insertAltVideo = function(video) {
-					if (supports_video()) {
-						if (supports_ogg_theora_video()) {
-							video.src = "../media/cap12_edit.ogv";
-						} else if (supports_h264_baseline_video()) {
-							video.src = "../media/cap12_edit.mp4";
-						} else {
-							return false;
-						}
-						//video.play();
-						return true;
-					} else return false;
-				}*/
+		
 				navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 				window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
 
