@@ -45,7 +45,6 @@
 			}
 			
 			#content {
-				margin-top : 50px;
 				margin-left : auto;
 				margin-right : auto;
 				max-width: 600px;
@@ -99,10 +98,22 @@
 				fill : steelblue;
 				fill-opacity : .9;
 			}
+			.suspend {
+			    position: fixed;
+			    top: 200px;
+			    right: 0px;
+			}
+			.right-btn {
+			    width: 25px;
+			    height: 91px;
+			    background: url(timg.jpeg);
+			    border: 1px dashed #ff2a00;
+			}
 
 		</style>
 	</head>
 	<body>
+		<script src="jquery-3.1.1.min.js"></script>
 		<script src="utils.js"></script>
 		<script src="clmtrackr.js"></script>
 		<script src="model_pca_20_svm_emotionDetection.js"></script>
@@ -110,7 +121,32 @@
 		<script src="d3.js"></script>
 		<script src="emotion_classifier.js"></script>
 		<script src="emotionmodel.js"></script>
-		<div id="content">
+		<script type="text/javascript">
+		$(document).ready(function(){
+							   
+			/* 滑动/展开 */
+			$(".right-btn").click(function(){
+				$(".right-btn").animate({ width: 'hide', display: 'none' });	
+	
+				/*$(this).parent().find("ul.menu").slideToggle(800);*/  //上下滚动函数slidetoggle（speed,）
+				$("#content").animate({ width: 'show' ,height:'show' ,display:'block',}); //height 变化可有可无
+		
+			});
+
+			//close menu(必须包含在函数之内)
+			$(".xxx").click(function(){
+				$(".right-btn").animate({ width: 'show',  display: 'block' });	
+				$("#content").animate({ width: 'hide' ,height:'hide',display:'none',}); 	//height 变化可有可无
+		
+			});
+
+		});
+		</script>
+		<div class="suspend">
+			<div class="right-btn">
+				<span class="arrow up"></span>
+			</div>
+		<div id="content" style="display:none;">
 			<h2>学习专注度识别</h2>
 			<p>此功能正在开发中，目前对你的成绩不会产生任何影响</p>
 			<div id="container">
@@ -195,7 +231,9 @@
 <span style="width: 1px; height: 18.9px; float: left; background-color: rgb(16, 16, 48);"></span>
 <span style="width: 1px; height: 21.6px; float: left; background-color: rgb(16, 16, 48);"></span>
 <span style="width: 1px; height: 23.7px; float: left; background-color: rgb(16, 16, 48);"></span>
-</div></div><div style="text-align: left; line-height: 1.2em; background-color: rgb(8, 24, 8); padding: 0px 0px 3px 3px; display: none;">
+</div>
+</div>
+<div style="text-align: left; line-height: 1.2em; background-color: rgb(8, 24, 8); padding: 0px 0px 3px 3px; display: none;">
 <div style="font-family: Helvetica,Arial,sans-serif; font-size: 9px; color: rgb(0, 255, 0); font-weight: bold;">20 MS (16-2980416)</div>
 <div style="position: relative; width: 74px; height: 30px; background-color: rgb(0, 255, 0);">
 <span style="width: 1px; height: 27.3px; float: left; background-color: rgb(16, 48, 16);"></span>
@@ -465,7 +503,10 @@
 				}, false);
 				
 			</script>
-		</div><canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
+		</div>
+		<canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
+	</div>
 	
 
-</body></html>
+</body>
+</html>
